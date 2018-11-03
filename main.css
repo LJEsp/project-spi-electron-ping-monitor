@@ -1,0 +1,18 @@
+body {
+  font-family: sans-serif;
+  /* color: #ffffff;
+  background-color: #3c3c3c; */
+}
+
+.site-list-item {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.ping-success {
+  color: green;
+}
+
+.ping-fail {
+  color: darkred;
+}
