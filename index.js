@@ -17,7 +17,7 @@ let mainWindow;
 // });
 
 app.on("ready", () => {
-  mainWindow = new BrowserWindow();
+  mainWindow = new BrowserWindow({ minWidth: 900, minHeight: 700 });
 
   mainWindow.loadURL(`file://${__dirname}/main.html`);
 
@@ -29,7 +29,7 @@ ipcMain.on("host:request", (event, host) => {
   pingData.host = host;
 
   ping.promise.probe(host, { timeout: 10 }).then(res => {
-    console.log(`${host}, ${res.alive}`);
+    // console.log(`${host}, ${res.alive}`);
 
     // pingData.details = `${res.alive}, ${res.time} ms, ${res.numeric_host}`;
     pingData.isAlive = res.alive;
