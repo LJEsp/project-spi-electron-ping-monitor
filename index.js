@@ -17,7 +17,7 @@ let mainWindow;
 // });
 
 app.on("ready", () => {
-  mainWindow = new BrowserWindow({ minWidth: 900, minHeight: 700 });
+  mainWindow = new BrowserWindow({ minWidth: 900, minHeight: 800 });
 
   mainWindow.loadURL(`file://${__dirname}/main.html`);
 

@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^3.0.7",
+    "json2csv": "^4.2.1",
+    "moment": "^2.22.2",
     "ping": "^0.2.2"
   },
   "devDependencies": {

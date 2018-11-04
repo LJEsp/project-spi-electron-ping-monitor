@@ -1,5 +1,11 @@
+const fs = require("fs");
+
 const electron = require("electron");
 const { ipcRenderer } = electron;
+const { dialog } = require("electron").remote;
+const Json2csvParser = require("json2csv").Parser;
+const moment = require("moment");
+
 const sites = require("./sites.json");
 
 const sitesList = document.getElementById("list");
@@ -21,6 +27,8 @@ function loadApp() {
       hostsCount++;
 
       const hostListItem = document.createElement("li");
+      hostListItem.setAttribute("id", "hostListItem");
+
       const hostText = document.createTextNode(host);
       hostListItem.setAttribute("key", host);
 
@@ -40,6 +48,57 @@ function loadApp() {
 
 // Initialize
 loadApp();
+
+// Download
+function download() {
+  const downloadable = [];
+  const fields = ["name", "hosts.host", "hosts.detail"];
+
+  const sites = document.querySelectorAll(".site-list-item");
+
+  sites.forEach(site => {
+    const dlSite = {};
+    dlSite.name = site.textContent;
+    dlSite.hosts = [];
+
+    site.nextSibling.childNodes.forEach(host => {
+      const dlHost = {};
+      const array = host.textContent.split(" — ");
+      dlHost.host = array[0];
+      dlHost.detail = array[1];
+
+      dlSite.hosts.push(dlHost);
+    });
+
+    downloadable.push(dlSite);
+  });
+
+  // Convert JSON to CSV using module
+  const json2csvParser = new Json2csvParser({ fields, unwind: ["hosts"] });
+  const csv = json2csvParser.parse(downloadable);
+
+  console.log(csv);
+
+  console.log(downloadable);
+
+  // Save CSV with dialog
+  dialog.showSaveDialog(
+    {
+      defaultPath: `SPi Ping - ${moment().format("MMM DD YYYY, h mm ss a")}.csv`
+    },
+    fileName => {
+      if (fileName === undefined) return;
+
+      fs.writeFile(fileName, csv, err => {
+        if (err) {
+          alert("An error ocurred creating the file " + err.message);
+        }
+
+        alert("The file has been succesfully saved");
+      });
+    }
+  );
+}
 
 // Reload function
 function reloadApp() {
@@ -78,23 +137,4 @@ ipcRenderer.on("host:ping", (e, data) => {
 
     countPing.textContent = pingCount;
   });
-
-  // const pingedItem = document.querySelector(`[key="${data.host}"`);
-  // const key = data.host;
-
-  // const newItem = document.createElement("li");
-  // newItem.setAttribute("key", key);
-  // const newText = document.createTextNode(
-  //   `${data.host} — ${data.isAlive}, ${data.time} ms, ${data.numeric_host}`
-  // );
-
-  // if (data.isAlive === true) {
-  //   newItem.setAttribute("class", "ping-success");
-  // } else if (data.numeric_host === "oul") {
-  //   newItem.setAttribute("class", "ping-fail");
-  // }
-
-  // newItem.appendChild(newText);
-
-  // pingedItem.replaceWith(newItem);
 });
