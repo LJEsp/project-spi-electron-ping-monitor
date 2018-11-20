@@ -1,25 +1,18 @@
 const electron = require("electron");
 const { app, BrowserWindow, ipcMain } = electron;
 const ping = require("ping");
-const sites = require("./sites.json");
 
 let mainWindow;
 
-// const hosts = ["post.ch", "google.com.ph", "facebook.com", "192.168.1.1"];
-
-// hosts.forEach(function(host) {
-//   ping.sys.probe(host, function(isAlive) {
-//     var msg = isAlive
-//       ? "host " + host + " is alive"
-//       : "host " + host + " is dead";
-//     console.log(msg);
-//   });
-// });
-
 app.on("ready", () => {
-  mainWindow = new BrowserWindow({ minWidth: 900, minHeight: 800 });
+  mainWindow = new BrowserWindow({
+    minWidth: 900,
+    minHeight: 800,
+    // frame: false,
+    webPreferences: { backgroundThrottling: false }
+  });
 
-  mainWindow.loadURL(`file://${__dirname}/main.html`);
+  mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 
   mainWindow.webContents.on("did-finish-load", () => {});
 });

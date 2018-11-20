@@ -6,7 +6,7 @@ const { dialog } = require("electron").remote;
 const Json2csvParser = require("json2csv").Parser;
 const moment = require("moment");
 
-const sites = require("./sites.json");
+const sites = require("../sites.json");
 
 const sitesList = document.getElementById("list");
 
@@ -137,4 +137,8 @@ ipcRenderer.on("host:ping", (e, data) => {
 
     countPing.textContent = pingCount;
   });
+
+  if (hostsCount === pingCount) {
+    reloadApp();
+  }
 });
